@@ -1,0 +1,26 @@
+﻿<UserControl
+    x:Class="Anony.Controls.FlipPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Anony.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+     d:DesignHeight="160" d:DesignWidth="480">
+    
+    <Grid RequestedTheme="Dark">
+        <Grid Background="#C8383838">
+            <StackPanel Margin="8">
+                <TextBox Name="AcPhoneTextBox" PlaceholderText="关键字" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="翻页" HorizontalAlignment="Center" Name="SearchButton" Click="OKButton_Click"/>
+                    <Button Grid.Column="1" HorizontalAlignment="Center" Content="取消" Click="CancelButton_Click"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,42 @@
+﻿<Page
+    x:Class="Anony.Views.ReplyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Anony.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cm="using:Caliburn.Micro"
+    mc:Ignorable="d"
+    Background="{StaticResource AcBackground}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button MinWidth="93"  BorderThickness="1" Margin="3,0" BorderBrush="{StaticResource AcThemeBrush}" Content="绘图" cm:Message.Attach="[Event Click]=[Action DrawClick()]" Foreground="{StaticResource AcContent}"/>
+            <Button MinWidth="93" BorderThickness="1" Margin="3,0" BorderBrush="{StaticResource AcThemeBrush}"  Content="颜文字" cm:Message.Attach="[Event Tapped]=[Action ShowClick()];[Event Holding]=[Action AcExpreClick()]" Foreground="{StaticResource AcContent}"/>
+            <Button MinWidth="93" BorderThickness="1" Margin="3,0" BorderBrush="{StaticResource AcThemeBrush}"  Content="图像"  cm:Message.Attach="[Event Tapped]=[Action PhotoClick()];[Event Holding]=[Action ClearClick()]"   Foreground="{StaticResource AcContent}"/>
+            <Button MinWidth="93" BorderThickness="1" Margin="3,0" BorderBrush="{StaticResource AcThemeBrush}"  Content="发送" cm:Message.Attach="[Event Click]=[Action SendClick()]" Foreground="{StaticResource AcContent}"/>
+        </StackPanel>
+        <ListView Grid.Row="1" Height="250" Margin="0,10" cm:Message.Attach="[Event ItemClick]=[Action EmoClick($clickedItem)]" IsItemClickEnabled="True" ItemsSource="{Binding Emos}" Visibility="{Binding EmosVisibility}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" FontSize="26" HorizontalAlignment="Center" Foreground="{StaticResource AcContent}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBox Name="TextBox" SelectionStart="{Binding SelectionStart}" AcceptsReturn="True" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" BorderBrush="DodgerBlue" Margin="3" BorderThickness="1" Grid.Row="2" Text="{Binding ContentText,Mode=TwoWay}" VerticalAlignment="Stretch"/>
+    </Grid>
+    <Page.BottomAppBar>
+        <CommandBar Visibility="{Binding CommandBarVisibility}" RequestedTheme="Dark" Opacity="0.7">
+            <AppBarButton Icon="Send" Label="发送" cm:Message.Attach="SendClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>

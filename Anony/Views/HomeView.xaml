@@ -1,0 +1,146 @@
+﻿<Page
+    x:Class="Anony.Views.HomeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Anony.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cm="using:Caliburn.Micro"
+    xmlns:cn="using:Anony.Controls"
+    mc:Ignorable="d"
+    Background="{StaticResource AcBackground}">
+    <Page.Resources>
+        <CollectionViewSource x:Key="CollectionViewSource" IsSourceGrouped="True" Source="{Binding Sections}"/>
+        <DataTemplate x:Key="ChannelHeaderTemplate">
+            <Grid>
+                <TextBlock Text="{Binding GroupKey}" Foreground="DodgerBlue" FontSize="24"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ChannelTemplate">
+            <Grid Margin="0,3" HorizontalAlignment="Stretch" cm:Message.Attach="[Event Tapped]=[Action SectionClick($dataContext)]">
+                <Border  BorderThickness="0,0,0,2">
+                    <TextBlock Text="{Binding Name}" Foreground="White" TextAlignment="Center" FontSize="22"
+                          />
+                    <Border.BorderBrush>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#00000000" Offset="0"/>
+                            <GradientStop Color="#D01E90FF" Offset="0.5"/>
+                            <GradientStop Color="#00000000" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                </Border>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="JumpTemplate">
+            <Border HorizontalAlignment="Stretch" Opacity="0.8" Background="{StaticResource PhoneAccentBrush}" Margin="10">
+                <TextBlock Margin="10" Text="{Binding Group.GroupKey}" FontSize="18" VerticalAlignment="Center"  HorizontalAlignment="Center" Foreground="White"/>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="ContentTemplate">
+            <Grid cm:Message.Attach="[Event Tapped]=[Action BunchClick($dataContext)]">
+                <Grid Margin="10" Background="{StaticResource AcHomeBorder}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.RowSpan="3" Foreground="{StaticResource AcTitle}" cn:VerticalTextBlock.Text="{Binding Title}" FontSize="{Binding Source={StaticResource Fonts},Path=TitleFontSize}"/>
+                    <StackPanel Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                        <TextBlock Text="{Binding CreatedTime}" FontSize="{Binding Source={StaticResource Fonts},Path=TitleFontSize}" Foreground="{StaticResource AcTitle}"/>
+                        <TextBlock cn:UidConverter.Source="{Binding}" Margin="10,0,0,0" FontSize="{Binding Source={StaticResource Fonts},Path=TitleFontSize}" Foreground="{StaticResource AcTitle}"/>
+                        <TextBlock cn:NameConverter.Source="{Binding}" Margin="10,0,0,0" FontSize="{Binding Source={StaticResource Fonts},Path=TitleFontSize}" Foreground="{StaticResource AcTitle}"/>
+                    </StackPanel>
+                    <Canvas Grid.Column="2" Grid.Row="0">
+                        <Border MinHeight="25" MinWidth="30" Background="DodgerBlue">
+                            <TextBlock Text="{Binding ReplyCount}" Margin="3,2" Foreground="White" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Path Data="m 0,0 l 0,16 l 16,0 l -16,16"
+                                    Fill="DodgerBlue"
+                                    Margin="8,5,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                    </Canvas>
+                    <RichTextBlock IsTextSelectionEnabled="False" FontSize="{Binding Source={StaticResource Fonts},Path=ContentSize}" cn:RichTextHelper.Source="{Binding}" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Foreground="{StaticResource AcContent}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" Text="{Binding UpdatedTime}" FontSize="{Binding Source={StaticResource Fonts},Path=TitleFontSize}" Foreground="{StaticResource AcTitle}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid>
+        <FlipView Name="FlipView" Padding="0" HorizontalContentAlignment="Stretch" SelectedIndex="{Binding SelectedIndex,Mode=TwoWay}">
+            <FlipViewItem Padding="0" MaxWidth="0">
+              
+            </FlipViewItem>
+            <FlipViewItem Margin="-1" Padding="0">
+                  <Grid>
+                    <ListView FontSize="20" IsItemClickEnabled="True" 
+                          ItemsSource="{Binding Bunches}" x:Name="ListView" ItemTemplate="{StaticResource ContentTemplate}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <ContentPresenter HorizontalAlignment="Stretch"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <ProgressRing Width="120" Height="120" IsActive="{Binding IsDown}" Background="Transparent" Foreground="DodgerBlue"/>
+                    <Image Width="150" Height="150" Source="/Assets/image_error.png" Stretch="None" Visibility="{Binding ErrorVisib}"/>
+                </Grid>
+            </FlipViewItem>
+            <FlipViewItem Padding="0" Visibility="{Binding MenuVisibility}" Background="#FF202020" MaxWidth="200">
+                <SemanticZoom>
+                    <SemanticZoom.ZoomedInView>
+                        <ListView Margin="0,0,0,10" Name="ListViewMenu" ItemTemplate="{StaticResource ChannelTemplate}"
+                           ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.GroupStyle>
+                                <GroupStyle HidesIfEmpty="True" HeaderTemplate="{StaticResource ChannelHeaderTemplate}"/>
+                            </ListView.GroupStyle>
+                            <ListView.FooterTemplate>
+                                <DataTemplate>
+                                    <Border Height="60"/>
+                                </DataTemplate>
+                            </ListView.FooterTemplate>
+                        </ListView>
+                    </SemanticZoom.ZoomedInView>
+                    <SemanticZoom.ZoomedOutView>
+                        <ListView ItemTemplate="{StaticResource JumpTemplate}"
+                            ItemsSource="{Binding Source={StaticResource CollectionViewSource},Path=CollectionGroups}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
+            </FlipViewItem>
+        </FlipView>
+    </Grid>
+    <Page.BottomAppBar>
+        <CommandBar RequestedTheme="Dark" Opacity="0.7">
+            <AppBarButton Icon="Add" Label="发串" cm:Message.Attach="CreateClick"/>
+            <AppBarButton Icon="Go" Label="到串" cm:Message.Attach="GoToClick"/>
+        
+            <AppBarButton Icon="List" Label="板块" cm:Message.Attach="ShowMenuClick"/>
+            <AppBarButton Icon="Refresh" Label="刷新" cm:Message.Attach="RefreshClick"/>
+            <CommandBar.SecondaryCommands>    
+                <AppBarButton Icon="Favorite" Label="收藏夹" cm:Message.Attach="FavoriteClick"/>
+                <AppBarButton Icon="Setting" Label="设置" cm:Message.Attach="SettingClick"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>
